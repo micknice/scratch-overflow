@@ -7,7 +7,14 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    
     extend: {
+      gridTemplateRows: {
+        '8': 'repeat(8, minmax(0, 1fr))',
+      },
+      fontFamily: {
+        arimo: ['Arimo', 'sans-serif']
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
