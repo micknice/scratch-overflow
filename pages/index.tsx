@@ -11,7 +11,7 @@ export default function Home() {
     <>
       
       <Head>
-        <title>Welcome to The Memosphere</title>
+        <title>Cash Overflow</title>
         <meta name='description' content='etc...' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
