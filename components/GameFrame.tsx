@@ -141,7 +141,7 @@ const GameFrame = observer(() => {
                     {gameStarted && gameFinished && scratch.keyLang === 'Loss' &&
                     <div className='h-full w-full grid grid-rows-3 col-span-1'>
                         <div className='flex justify-center items-center'>
-                            <p className='text-white text-lg '>Unfortunately we have decided to go with a candidate who's skills are better suited to the role.</p>
+                            <p className='text-white text-lg '>Unfortunately we have decided to go with a candidate whos skills are better suited to the role.</p>
                         </div>
                         <div onClick={handlePlayAgain} className=' flex justify-center items-center select-none'>
                             <p className='outline rounded text-2xl text-white p-3 shadow-xl hover:scale-105 }'>Play Again?</p>
