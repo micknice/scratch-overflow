@@ -9,7 +9,6 @@ import Rust from '../public/assets/logos/rustsml.png'
 import Go from '../public/assets/logos/gosml.png'
 import Ruby from '../public/assets/logos/rubysml.png'
 import Zig from '../public/assets/logos/zigsml.png'
-import ReactCardFlip from 'react-card-flip'
 import {useState, useEffect} from 'react'
 import FlipCell from './FlipCell'
 import scratch from '../scratchEngine/Scratch'
@@ -17,18 +16,13 @@ import { observer } from "mobx-react-lite"
 import store from '../store/store'
 import {useSound} from 'use-sound'
 
-interface GameProps {
-    title: string;
-  }
-
-
-
 const GameFrame = observer(() => {
 
     const [gameStarted, setGameStarted] = useState(false)
     const [gameFinished, setGameFinished] = useState(false)
 
     const [playKerching] = useSound('/assets/sfx/kerching.mp3')
+    const [playSigh] = useSound('/assets/sfx/sigh.mp3', {volume:0.2})
     const [playCork] = useSound('/assets/sfx/cork.mp3')
     const [playClick] = useSound('/assets/sfx/click.mp3')
     const [playRiser] = useSound('/assets/sfx/riser.mp3')
@@ -37,7 +31,11 @@ const GameFrame = observer(() => {
 
     useEffect(()=> {
         if(store.flipCount === 9) {
-            playKerching()
+            if(scratch.keyLang === 'Loss') {
+                playSigh()
+            } else {
+                playKerching()
+            }
             const delay = async() => {
                 const delay = (duration: number) => new Promise(resolve => setTimeout(resolve, duration));
                 await delay(800)
@@ -51,20 +49,20 @@ const GameFrame = observer(() => {
 
     const handleStartGame = async() => {
         const delay = (ms : number) => new Promise(resolve => setTimeout(resolve, ms));
+        stop()
         playJazz()
         playClick()
         playRiser()
-        await delay(700)
+        await delay(800)
         playCork()
         setGameStarted(true)
     }
+
     const handlePlayAgain = () => {
         scratch.initializeGame()
-        // setGameStarted(false)
-        stop()
         store.flipCount = 0
         setGameFinished(false)
-        handleStartGame()
+        setGameStarted(false)
     }
     return (
         <div className='bg-blue-900  outline h-2/3 w-1/3  grid grid-rows-5 p-5 '>
@@ -129,10 +127,21 @@ const GameFrame = observer(() => {
                         </div>
                     </div>
                     }
-                    {gameStarted && gameFinished &&
+                    {gameStarted && gameFinished && scratch.keyLang !== 'Loss' &&
                     <div className='h-full w-full grid grid-rows-3 col-span-1'>
                         <div className='flex justify-center items-center'>
                             <p className='text-white text-lg '>Congratulations you are now a {scratch.keyLang} developer.</p>
+                        </div>
+                        <div onClick={handlePlayAgain} className=' flex justify-center items-center select-none'>
+                            <p className='outline rounded text-2xl text-white p-3 shadow-xl hover:scale-105 }'>Play Again?</p>
+                        </div>
+                        
+                    </div>
+                    }
+                    {gameStarted && gameFinished && scratch.keyLang === 'Loss' &&
+                    <div className='h-full w-full grid grid-rows-3 col-span-1'>
+                        <div className='flex justify-center items-center'>
+                            <p className='text-white text-lg '>Unfortunately we have decided to go with a candidate who's skills are better suited to the role.</p>
                         </div>
                         <div onClick={handlePlayAgain} className=' flex justify-center items-center select-none'>
                             <p className='outline rounded text-2xl text-white p-3 shadow-xl hover:scale-105 }'>Play Again?</p>

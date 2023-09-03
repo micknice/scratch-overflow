@@ -39,12 +39,10 @@ class Scratch {
     rollResult(): string {
         const rollWin = Math.floor(Math.random() * 3) + 1;
 
-        if (rollWin <= 0) {
+        if (rollWin <= 2) {
             this.keyLang = 'Loss'
-            console.log('keylang loss',this.keyLang)
             return 'Loss';
         } else {
-            console.log('win')
             const rollPrize = Math.floor(Math.random() * 384) + 1;
             if (rollPrize <= 3) {
                 this.keyLang = 'Zig';
@@ -66,11 +64,8 @@ class Scratch {
             } else if (rollPrize <= 200) {
                 this.keyLang = 'PHP'; 
                 return 'PHP'; 
-                console.log('keylang php', this.keyLang)
             } else {
-
                 this.keyLang = 'Dart';
-                console.log('keylang dart', this.keyLang)
                 return 'Dart';
             }
         }
@@ -99,7 +94,6 @@ class Scratch {
             }
             return cardImgArr
         } else {
-            console.log('result',result)
             const cardImgArr: StaticImageData[] = [this.baseImgObj[result], this.baseImgObj[result]]
             const paddingImgArr: StaticImageData[] = []
             const excludedArr = this.baseImgArr.filter((img) => img !== this.baseImgObj[result])
@@ -111,7 +105,11 @@ class Scratch {
             const mergedArr = cardImgArr.concat(paddingImgArr)
             mergedArr.sort(()=> Math.random() - 0.5)
             mergedArr.push(this.baseImgObj[result])
-            return mergedArr
+            if(mergedArr.length === 9) {
+                return mergedArr
+            } else {
+                return this.getCardImages(result)
+            }
         }
     }
 
