@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   return (
     <>
+      
       <Head>
         <title>Welcome to The Memosphere</title>
         <meta name='description' content='etc...' />

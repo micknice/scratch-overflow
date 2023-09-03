@@ -12,7 +12,10 @@ import Zig from '../public/assets/logos/zigsml.png'
 import ReactCardFlip from 'react-card-flip'
 import {useState, useEffect} from 'react'
 import FlipCell from './FlipCell'
-import Scratch from '../scratchEngine/Scratch'
+import scratch from '../scratchEngine/Scratch'
+import { observer } from "mobx-react-lite"
+import store from '../store/store'
+import {useSound} from 'use-sound'
 
 interface GameProps {
     title: string;
@@ -20,13 +23,51 @@ interface GameProps {
 
 
 
-export default function GameFrame() {
+const GameFrame = observer(() => {
 
-    const scratch = new Scratch()
+    const [gameStarted, setGameStarted] = useState(false)
+    const [gameFinished, setGameFinished] = useState(false)
 
+    const [playKerching] = useSound('/assets/sfx/kerching.mp3')
+    const [playCork] = useSound('/assets/sfx/cork.mp3')
+    const [playClick] = useSound('/assets/sfx/click.mp3')
+    const [playRiser] = useSound('/assets/sfx/riser.mp3')
+    const [playJazz, {stop}] = useSound('/assets/sfx/bigband.mp3', {volume:0.125})
     
+
+    useEffect(()=> {
+        if(store.flipCount === 9) {
+            playKerching()
+            const delay = async() => {
+                const delay = (duration: number) => new Promise(resolve => setTimeout(resolve, duration));
+                await delay(800)
+                setGameFinished(true)
+            }
+            delay()
+            
+            
+        }
+    },[store.flipCount])
+
+    const handleStartGame = async() => {
+        const delay = (ms : number) => new Promise(resolve => setTimeout(resolve, ms));
+        playJazz()
+        playClick()
+        playRiser()
+        await delay(700)
+        playCork()
+        setGameStarted(true)
+    }
+    const handlePlayAgain = () => {
+        scratch.initializeGame()
+        // setGameStarted(false)
+        stop()
+        store.flipCount = 0
+        setGameFinished(false)
+        handleStartGame()
+    }
     return (
-        <div className='bg-blue-900 outline h-2/3 w-1/3  grid grid-rows-5 p-5 '>
+        <div className='bg-blue-900  outline h-2/3 w-1/3  grid grid-rows-5 p-5 '>
             {/* title row */}
             <div className='bg-white  h-full w-full row-span-1 flex items-center justify-center p-2'>
                 <div className='h-full w-auto mr-2'>
@@ -35,12 +76,22 @@ export default function GameFrame() {
                 <p className="text-6xl font-sans font-normal ml-2 pb-2">cash</p>
                 <p className="ml-1 text-6xl font-sans font-bold pb-2">overflow</p>
             </div>
-
-            <div className='h-full w-full row-span-3 grid grid-cols-5'>
+             
+            <div className='h-full w-full row-span-3 grid grid-cols-5 pt-6'>
                 {/* upperleft box - game 1 board here*/}
                 <div className='col-span-3'>
+                    {!gameStarted &&
                     <div className='h-full w-full grid grid-rows-3 col-span-1'>
-                        {/* top-row */}
+                        <div/>
+                        <div onClick={handleStartGame} className=' flex justify-center items-center select-none'>
+                            <p className='outline rounded text-2xl text-white p-3 shadow-xl hover:scale-105 }'>Start Game!</p>
+                        </div>
+                        
+                    </div>
+                    }
+                    {gameStarted && !gameFinished &&
+                    <div className='h-full w-full grid grid-rows-3 col-span-1'>
+
                         <div className=' row-span-1 grid grid-cols-3'>
                             <div className='flex justify-center items-center'>
                                 <FlipCell flippedImg={scratch.cardImgArr[0]}/>
@@ -52,7 +103,7 @@ export default function GameFrame() {
                                 <FlipCell flippedImg={scratch.cardImgArr[2]}/>
                             </div>
                         </div>
-                        {/* middle-row */}
+
                         <div className=' row-span-1 grid grid-cols-3'>
                             <div className='flex justify-center items-center'>
                                 <FlipCell flippedImg={scratch.cardImgArr[3]}/>
@@ -64,7 +115,7 @@ export default function GameFrame() {
                                 <FlipCell flippedImg={scratch.cardImgArr[5]}/>
                             </div>
                         </div>
-                        {/* bottom-row */}
+
                         <div className=' row-span-1 grid grid-cols-3'>
                             <div className='flex justify-center items-center'>
                                 <FlipCell flippedImg={scratch.cardImgArr[6]}/>
@@ -76,9 +127,19 @@ export default function GameFrame() {
                                 <FlipCell flippedImg={scratch.cardImgArr[8]}/>
                             </div>
                         </div>
+                    </div>
+                    }
+                    {gameStarted && gameFinished &&
+                    <div className='h-full w-full grid grid-rows-3 col-span-1'>
+                        <div className='flex justify-center items-center'>
+                            <p className='text-white text-lg '>Congratulations you are now a {scratch.keyLang} developer.</p>
+                        </div>
+                        <div onClick={handlePlayAgain} className=' flex justify-center items-center select-none'>
+                            <p className='outline rounded text-2xl text-white p-3 shadow-xl hover:scale-105 }'>Play Again?</p>
+                        </div>
                         
                     </div>
-
+                    }
                 </div>
                 {/* upperright box - game 1 key here */}
                 <div className='bg-white   col-span-2 grid grid-rows-8 mt-2 ml-2' >
@@ -124,13 +185,17 @@ export default function GameFrame() {
                     </div>
                 </div>
             </div>
+            
             {/* instructions row */}
             <div className='bg-blue-900  h-full w-full p-10'>
-            <p className='text-xs text-white py-2'>Match 3 of the same symbol to pursue a career in a language and receive a payment every year for life!!</p>
-            <p className='text-xs text-white'>Local taxes may vary. Your language may devalue. Gamble responsibly. </p>
+            <p className='text-xs text-yellow-400 py-2'>Match 3 of the same symbol to pursue a career in a language and receive a payment every year for life!!</p>
+            <p className='text-xs text-yellow-400'>Local taxes may vary. Your language may devalue. Gamble responsibly. </p>
             </div>
             
             
         </div>
     )
-}
+})
+
+
+export default GameFrame

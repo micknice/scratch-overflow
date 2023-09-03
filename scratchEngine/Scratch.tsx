@@ -13,6 +13,7 @@ class Scratch {
     baseImgArr: Array<StaticImageData>; 
     cardImgArr: Array<StaticImageData>
     baseImgObj: {[key: string] : StaticImageData}
+    keyLang: string
     
     constructor() {
         this.baseImgArr = [Dart, PHP, JavaScript, Python, Rust, Go, Ruby, Zig]
@@ -28,34 +29,52 @@ class Scratch {
         }
         
         this.cardImgArr = this.getCardImages(this.rollResult())
+        this.keyLang = 'None'
     }
 
-    rollResult() {
+    initializeGame() {
+        this.cardImgArr = this.getCardImages(this.rollResult())
+    }
+
+    rollResult(): string {
         const rollWin = Math.floor(Math.random() * 3) + 1;
 
         if (rollWin <= 0) {
+            this.keyLang = 'Loss'
+            console.log('keylang loss',this.keyLang)
             return 'Loss';
         } else {
             console.log('win')
             const rollPrize = Math.floor(Math.random() * 384) + 1;
-            if (rollPrize <= 1) {
+            if (rollPrize <= 3) {
+                this.keyLang = 'Zig';
                 return 'Zig'; 
-            } else if (rollPrize <= 3) {
+            } else if (rollPrize <= 6) {
+                this.keyLang = 'Ruby'; 
                 return 'Ruby'; 
-            } else if (rollPrize <= 7) {
+            } else if (rollPrize <= 12) {
+                this.keyLang = 'Go'; 
                 return 'Go'; 
-            } else if (rollPrize <= 15) {
+            } else if (rollPrize <= 25) {
+                this.keyLang = 'Rust'; 
                 return 'Rust'; 
-            } else if (rollPrize <= 31) {
+            } else if (rollPrize <= 50) {
+                this.keyLang = 'Python'; 
                 return 'Python'; 
-            } else if (rollPrize <= 63) {
-                return 'JavaScript'; 
-            } else if (rollPrize <= 127) {
+            } else if (rollPrize <= 100) {
+                this.keyLang = 'JavaScript'; 
+            } else if (rollPrize <= 200) {
+                this.keyLang = 'PHP'; 
                 return 'PHP'; 
+                console.log('keylang php', this.keyLang)
             } else {
+
+                this.keyLang = 'Dart';
+                console.log('keylang dart', this.keyLang)
                 return 'Dart';
             }
         }
+        return 'None'
     }
 
     containsDuplicate(arr: StaticImageData[], target: StaticImageData): boolean {
@@ -71,7 +90,7 @@ class Scratch {
         return false; 
       }
 
-    getCardImages(result: string) {
+    getCardImages(result: string): StaticImageData[] {
         if (result === 'Loss') {
             const cardImgArr: StaticImageData[] = []
             for (let i = 0; i < 9; i++) {
@@ -81,7 +100,7 @@ class Scratch {
             return cardImgArr
         } else {
             console.log('result',result)
-            const cardImgArr: StaticImageData[] = [this.baseImgObj[result], this.baseImgObj[result], this.baseImgObj[result]]
+            const cardImgArr: StaticImageData[] = [this.baseImgObj[result], this.baseImgObj[result]]
             const paddingImgArr: StaticImageData[] = []
             const excludedArr = this.baseImgArr.filter((img) => img !== this.baseImgObj[result])
             console.log('excludedArr', excludedArr)
@@ -91,6 +110,7 @@ class Scratch {
             }
             const mergedArr = cardImgArr.concat(paddingImgArr)
             mergedArr.sort(()=> Math.random() - 0.5)
+            mergedArr.push(this.baseImgObj[result])
             return mergedArr
         }
     }
@@ -116,5 +136,7 @@ class Scratch {
     }
 }
 
-export default Scratch
+const scratch = new Scratch()
+
+export default scratch
 
