@@ -53,7 +53,7 @@ const GameFrame = observer(() => {
         playJazz()
         playClick()
         playRiser()
-        await delay(800)
+        await delay(700)
         playCork()
         setGameStarted(true)
     }

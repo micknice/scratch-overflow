@@ -1,18 +1,13 @@
 import React, { FC } from 'react';
 import GameFrame from './GameFrame';
 import GameFrameSm from './GameFrameSm';
-import {useSound} from 'use-sound'
 import scratch from '../scratchEngine/Scratch'
 import { useState, useEffect } from 'react';
 
 
-interface GameProps {
-    title: string;
-  }
 
-<div className='outline h-screen w-full justify-center items-center'>
-            <GameFrameSm/>
-        </div>
+
+
 
 
 
