@@ -61,6 +61,7 @@ class Scratch {
                 return 'Python'; 
             } else if (rollPrize <= 100) {
                 this.keyLang = 'JavaScript'; 
+                return 'JavaScript'
             } else if (rollPrize <= 200) {
                 this.keyLang = 'PHP'; 
                 return 'PHP'; 
