@@ -1,9 +1,18 @@
-Instant win game of chance themed around Stack Overflow 2023 survey.
+### Instant win game of chance themed around Stack Overflow 2023 survey.
 
-git clone
+#### TypeScript, Next.JS/React, Tailwind
 
-npm i
+#### Live version here: 
+
+- [CashOverflow](https://main--singular-manatee-cfe23a.netlify.app/)
+
+#### To run locally:
+
+
+git clone 
+
+npm i   
 
 npm run dev
 
-Gamble responsibly.
+#### Gamble responsibly.
